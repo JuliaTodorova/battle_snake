@@ -398,26 +398,77 @@ choosing a move for you.
 <h2 id="sec-3"><span class="section-number-2">3</span> Game rules</h2>
 <div class="outline-text-2" id="text-3">
 </div><div id="outline-container-sec-3-1" class="outline-3">
-<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Turns</h3>
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Objective</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
-Pellentesque dapibus suscipit ligula. Donec posuere augue in quam. Etiam vel
-tortor sodales tellus ultricies commodo. Suspendisse potenti. Aenean in sem ac
-leo mollis blandit. Donec neque quam, dignissim in, mollis nec, sagittis eu,
-wisi. Phasellus lacus. Etiam laoreet quam sed arcu. Phasellus at dui in ligula
-mollis ultricies. Integer placerat tristique nisl. Praesent augue. Fusce
-commodo. Vestibulum convallis, lorem a tempus semper, dui dui euismod elit,
-vitae placerat urna tortor vitae lacus. Nullam libero mauris, consequat quis,
-varius et, dictum id, arcu. Mauris mollis tincidunt felis. Aliquam feugiat
-tellus ut neque. Nulla facilisis, risus a rhoncus fermentum, tellus tellus
-lacinia purus, et dictum nunc justo sit amet elit.
+BattleSnake is an adaptation of the classic video game "Snake", where the player
+maneuvers a snake around the play field to collect food pellets, which makes
+the snake grow longer. The main objective is to collect as much food as
+as possible, while avoiding hitting obstacles, such as walls and most
+importantly - your own snake.
+In BattleSnake, each round X number of snakes is pitted against each other,
+and the goal is to be the last snake left alive at the end of the round.
 </p>
 </div>
 </div>
 
 <div id="outline-container-sec-3-2" class="outline-3">
-<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Growing longer</h3>
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> You lose if your snake&#x2026;</h3>
 <div class="outline-text-3" id="text-3-2">
+<ul class="org-ul">
+<li>runs into another snake's body.
+</li>
+<li>runs into its own body.
+</li>
+<li>runs into the walls of the play field.
+</li>
+<li>collides head-to-head with a longer snake (both die if they are of the same size).
+</li>
+<li>starves.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Starvation rules</h3>
+<div class="outline-text-3" id="text-3-3">
+<ul class="org-ul">
+<li>Your snake starts out with 100 life and counts down by 1 each turn.
+</li>
+<li>When your snake's life total reaches 0, it dies of starvation.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> Avoiding starvation</h3>
+<div class="outline-text-3" id="text-3-4">
+<ul class="org-ul">
+<li>Food pellets spawn randomly around the play field.
+</li>
+<li>Each food pellet increases your snake's length by 1 and resets its life to 100.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-5" class="outline-3">
+<h3 id="sec-3-5"><span class="section-number-3">3.5</span> Sportsmanship</h3>
+<div class="outline-text-3" id="text-3-5">
+<ul class="org-ul">
+<li>No DDoSing your opponents.
+</li>
+<li>No manual control of your snake.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-6" class="outline-3">
+<h3 id="sec-3-6"><span class="section-number-3">3.6</span> Turns</h3>
+<div class="outline-text-3" id="text-3-6">
 <p>
 Pellentesque dapibus suscipit ligula. Donec posuere augue in quam. Etiam vel
 tortor sodales tellus ultricies commodo. Suspendisse potenti. Aenean in sem ac
@@ -433,17 +484,35 @@ lacinia purus, et dictum nunc justo sit amet elit.
 </div>
 </div>
 
-<div id="outline-container-sec-3-3" class="outline-3">
-<h3 id="sec-3-3"><span class="section-number-3">3.3</span> Death</h3>
-<div class="outline-text-3" id="text-3-3">
-</div><div id="outline-container-sec-3-3-1" class="outline-4">
-<h4 id="sec-3-3-1"><span class="section-number-4">3.3.1</span> Walls</h4>
+<div id="outline-container-sec-3-7" class="outline-3">
+<h3 id="sec-3-7"><span class="section-number-3">3.7</span> Growing longer</h3>
+<div class="outline-text-3" id="text-3-7">
+<p>
+Pellentesque dapibus suscipit ligula. Donec posuere augue in quam. Etiam vel
+tortor sodales tellus ultricies commodo. Suspendisse potenti. Aenean in sem ac
+leo mollis blandit. Donec neque quam, dignissim in, mollis nec, sagittis eu,
+wisi. Phasellus lacus. Etiam laoreet quam sed arcu. Phasellus at dui in ligula
+mollis ultricies. Integer placerat tristique nisl. Praesent augue. Fusce
+commodo. Vestibulum convallis, lorem a tempus semper, dui dui euismod elit,
+vitae placerat urna tortor vitae lacus. Nullam libero mauris, consequat quis,
+varius et, dictum id, arcu. Mauris mollis tincidunt felis. Aliquam feugiat
+tellus ut neque. Nulla facilisis, risus a rhoncus fermentum, tellus tellus
+lacinia purus, et dictum nunc justo sit amet elit.
+</p>
 </div>
-<div id="outline-container-sec-3-3-2" class="outline-4">
-<h4 id="sec-3-3-2"><span class="section-number-4">3.3.2</span> Collision</h4>
 </div>
-<div id="outline-container-sec-3-3-3" class="outline-4">
-<h4 id="sec-3-3-3"><span class="section-number-4">3.3.3</span> Starvation</h4>
+
+<div id="outline-container-sec-3-8" class="outline-3">
+<h3 id="sec-3-8"><span class="section-number-3">3.8</span> Death</h3>
+<div class="outline-text-3" id="text-3-8">
+</div><div id="outline-container-sec-3-8-1" class="outline-4">
+<h4 id="sec-3-8-1"><span class="section-number-4">3.8.1</span> Walls</h4>
+</div>
+<div id="outline-container-sec-3-8-2" class="outline-4">
+<h4 id="sec-3-8-2"><span class="section-number-4">3.8.2</span> Collision</h4>
+</div>
+<div id="outline-container-sec-3-8-3" class="outline-4">
+<h4 id="sec-3-8-3"><span class="section-number-4">3.8.3</span> Starvation</h4>
 </div>
 </div>
 </div>
@@ -459,9 +528,14 @@ lacinia purus, et dictum nunc justo sit amet elit.
 </li>
 <li><a href="#sec-3">3. Game rules</a>
 <ul class="nav">
-<li><a href="#sec-3-1">3.1. Turns</a></li>
-<li><a href="#sec-3-2">3.2. Growing longer</a></li>
-<li><a href="#sec-3-3">3.3. Death</a></li>
+<li><a href="#sec-3-1">3.1. Objective</a></li>
+<li><a href="#sec-3-2">3.2. You lose if your snake&#x2026;</a></li>
+<li><a href="#sec-3-3">3.3. Starvation rules</a></li>
+<li><a href="#sec-3-4">3.4. Avoiding starvation</a></li>
+<li><a href="#sec-3-5">3.5. Sportsmanship</a></li>
+<li><a href="#sec-3-6">3.6. Turns</a></li>
+<li><a href="#sec-3-7">3.7. Growing longer</a></li>
+<li><a href="#sec-3-8">3.8. Death</a></li>
 </ul>
 </li>
 </ul>
