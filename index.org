@@ -357,3 +357,7 @@ Node.self()
 *** Walls
 *** Collision
 *** Starvation
+
+* Example Snakes
+** Ruby Snake
+   [[https://github.com/Stembolthq/battle_snake/blob/v2.0.0/examples/ruby_snake/ruby_snake.rb][Ruby Snake]]
