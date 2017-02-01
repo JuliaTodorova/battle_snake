@@ -1,7 +1,7 @@
 #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:nil
 #+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:nil e:t
 #+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
-#+OPTIONS: tasks:nil tex:t timestamp:nil title:nil toc:2 todo:nil |:t
+#+OPTIONS: tasks:nil tex:t timestamp:nil title:nil toc:3 todo:nil |:t
 #+TITLE: BattleSnake 2017 API
 #+LANGUAGE: en
 #+SELECT_TAGS: export
@@ -17,7 +17,13 @@
 #+HTML_HEAD: <link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 #+HTML_HEAD: <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 #+CREATOR: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org-mode</a> 9.0.3)
-#+LATEX_HEADER:
+
+#+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :exports none
+Node.self()
+#+END_SRC
+
+#+RESULTS:
+: :"org-server@localhost"
 
 * Introduction
   # some comments about how the game is structured.
@@ -32,7 +38,7 @@
   est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a sapien.
 
 * Callbacks
-** Game Start:
+** Game Start
    # some information on the api call
    Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
    facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
@@ -44,39 +50,69 @@
    non molestie mollis, magna orci ultrices dolor, at vulputate neque nulla
    lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
    pulvinar nibh. Nam a sapien.
-*** URL:
+*** URL
     #+BEGIN_SRC
     /start
     #+END_SRC
-*** Method:
+*** Method
     #+BEGIN_SRC
     POST
     #+END_SRC
-*** Headers:
+*** Headers
     #+BEGIN_SRC
     Content-Type: application/json
     #+END_SRC
-*** Example Request:
-    #+BEGIN_SRC json
-    {}
+*** Example Request
+    #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes
+      alias BattleSnake.{GameForm}
+
+      %GameForm{
+        id: Ecto.UUID.generate()
+      }
+      |> Poison.encode!(pretty: true)
+      |> IO.puts
     #+END_SRC
-*** Example Response:
+
+    #+RESULTS[b1b5b8aa7f8f6ff8a9ad1402d1a30bd6e28d8a90]:
+    #+BEGIN_SRC js
+    {
+      "width": 20,
+      "height": 20,
+      "game_id": "a7ee8ceb-5c82-4513-a6fe-7a1f86c160f7"
+    }
+    #+END_SRC
+
+*** Example Response
     - Code: 200
     - Content:
-    #+BEGIN_SRC json
-    {}
+    #+BEGIN_SRC js
+    {
+          "color": "#FF0000",
+          "head_url": "http://placecage.com/c/100/100",
+          "name": "Cage Snake",
+          "taunt": "OH GOD NOT THE BEES"
+      }
     #+END_SRC
-*** Sample call:
-    #+BEGIN_SRC sh
-    curl localhost:3000 -X POST -H "Content-Type: application/json" --data "{}"
+*** Sample call
+    #+BEGIN_SRC sh :results verbatim replace :exports both :cache yes :eval no-export :wrap "SRC js"
+      my_snake_server_url="localhost:4000/test-snake"
+
+      curl $my_snake_server_url/start \
+           -X POST \
+           -H "Content-Type: application/json" \
+           --data @- <<-REQUEST_BODY
+      {"width":20,"height":20,"game_id":"example-game-id"}
+       REQUEST_BODY
     #+END_SRC
-    #+BEGIN_SRC json
-    {}
+
+    #+RESULTS[53c4397691891d18ff67e7ffb1486a598d7ffd8f]:
+    #+BEGIN_SRC js
+    {"name":"test-snake","color":"#123123"}
     #+END_SRC
-*** Notes:
+
+*** Notes
     Requests timeout after 200ms, failing to respond will do something.
-** Get Snake Move
-   # some information on the api call
+** Request Snake Move
    Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
    facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
    odio. Nunc porta vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum.
@@ -87,42 +123,185 @@
    non molestie mollis, magna orci ultrices dolor, at vulputate neque nulla
    lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
    pulvinar nibh. Nam a sapien.
-*** URL:
+*** URL
     #+BEGIN_SRC
     /start
     #+END_SRC
-*** Method:
+*** Method
     #+BEGIN_SRC
     POST
     #+END_SRC
-*** Headers:
+*** Headers
     #+BEGIN_SRC
     Content-Type: application/json
     #+END_SRC
-*** Example Request:
-     #+BEGIN_SRC json
-     {}
-     #+END_SRC
-*** Example Response:
+*** Example Request
+    #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes :results value
+      alias BattleSnake.{
+        Snake,
+        World,
+      }
+
+      use BattleSnake.Point
+
+      my_snake = %Snake{
+        name: "my-snake",
+        url: "localhost:4000",
+        coords: [p(0, 0), p(0, 0), p(0, 0)],
+        id: Ecto.UUID.generate(),
+      }
+
+      other_snake = %Snake{
+        name: "other-snake",
+        url: "localhost:4001",
+        coords: [p(1, 0), p(1, 0), p(1, 0)],
+        id: Ecto.UUID.generate(),
+      }
+
+      food = [p(1,1)]
+
+      snakes = [my_snake, other_snake]
+
+      %World{
+        width: 2,
+        height: 2,
+        snakes: snakes,
+        food: food,
+        game_id: Ecto.UUID.generate(),
+      }
+      |> Poison.encode!(pretty: true, me: my_snake)
+      |> IO.puts()
+    #+END_SRC
+
+    #+RESULTS[446eb330ce51496bd7b99b5978d92fad138e6e2e]:
+    #+BEGIN_SRC js
+    {
+      "you": {
+        "url": "localhost:4000",
+        "name": "my-snake",
+        "coords": [
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      },
+      "turn": 0,
+      "snakes": [
+        {
+          "url": "localhost:4000",
+          "name": "my-snake",
+          "coords": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              0
+            ]
+          ]
+        },
+        {
+          "url": "localhost:4001",
+          "name": "other-snake",
+          "coords": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              0
+            ]
+          ]
+        }
+      ],
+      "game_id": "754c44c0-40bb-41d6-854a-e3d2083277fa",
+      "food": [
+        [
+          1,
+          1
+        ]
+      ],
+      "board": [
+        [
+          {
+            "state": "head",
+            "snake": "my-snake"
+          },
+          {
+            "state": "empty"
+          }
+        ],
+        [
+          {
+            "state": "head",
+            "snake": "other-snake"
+          },
+          {
+            "state": "food"
+          }
+        ]
+      ]
+    }
+    #+END_SRC
+
+
+*** Example Response
     - Code: 200
     - Content:
-    #+BEGIN_SRC json
-    {}
+    #+BEGIN_SRC js
+      {
+          "move": "up",
+          "taunt": "gotta go fast"
+      }
     #+END_SRC
-*** Sample call:
-    #+BEGIN_SRC sh
-    curl localhost:3000 -X POST -H "Content-Type: application/json" --data "{}"
+*** Sample call
+    #+BEGIN_SRC sh :results verbatim replace :exports both :cache yes :eval no-export :wrap "SRC js"
+      my_snake_server_url="localhost:4000/test-snake"
+
+      curl $my_snake_server_url/move \
+           -X POST \
+           -H "Content-Type: application/json" \
+           --data @- <<-REQUEST_BODY
+         {{"you": {"name": "my-snake", "coords": [[0, 0], [0, 0], [0, 0]]},
+         "turn": 0, "snakes": [{"name": "my-snake", "coords": [[0, 0], [0, 0],
+         [0, 0]]}], "game_id": 0, "food": [[0, 1]], "board": [[{"state": "head",
+         "snake": "my-snake"}, {"state": "food"}], [{"state": "empty"},
+         {"state": "empty"}]]}
+         REQUEST_BODY
     #+END_SRC
-    #+BEGIN_SRC json
-    {}
+
+    #+RESULTS[5daf13e98697255d552f68e3d7fbe143f00821f5]:
+    #+BEGIN_SRC js
+    {"move":"right"}
     #+END_SRC
-*** Notes:
+
+
+*** Notes
     Requests timeout after 200ms, failing to respond will result in the server
     choosing a move for you.
 
 *  Game rules
 ** Objective
-   
+
    BattleSnake is an adaptation of the classic video game "Snake", where the player
    maneuvers a snake around the play field to collect food pellets, which makes
    the snake grow longer. The main objective is to collect as much food as
@@ -131,10 +310,10 @@
    In BattleSnake, each round X number of snakes is pitted against each other,
    and the goal is to be the last snake left alive at the end of the round.
 
-** You lose if your snake... 
+** You lose if your snake...
    - runs into another snake's body.
    - runs into its own body.
-   - runs into the walls of the play field. 
+   - runs into the walls of the play field.
    - collides head-to-head with a longer snake (both die if they are of the same size).
    - starves.
 
