@@ -119,16 +119,11 @@ All responses are expected to have a =200 OK= status code.
    :PROPERTIES:
    :CUSTOM_ID: post-move
    :END:
-   Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
-   facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
-   odio. Nunc porta vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum.
-   Aliquam posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
-   malesuada massa, quis varius mi purus non odio. Pellentesque condimentum,
-   magna ut suscipit hendrerit, ipsum augue ornare nulla, non luctus diam neque
-   sit amet urna. Curabitur vulputate vestibulum lorem. Fusce sagittis, libero
-   non molestie mollis, magna orci ultrices dolor, at vulputate neque nulla
-   lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
-   pulvinar nibh. Nam a sapien.
+   The game server will issue a request for this callback on each turn to
+   request the client's move.
+
+   This callback should be used for all game logic
+
 *** URL
     =/move=
 *** Method
@@ -298,8 +293,45 @@ All responses are expected to have a =200 OK= status code.
 *** Notes
     Requests timeout after 200ms, failing to respond will result in the server
     choosing a move for you.
+** Simple Example Snake
+   Below is a simple example snake. This is what the bare minimum implementation
+   of a /functional/ snake might look like.
 
-* Game rules
+   This example is written in Ruby, but you are of course not limited in what
+   technology you wish to use.
+
+   In the below example we create a basic Sinatra[fn:1] web application. The app
+   severs the two post callbacks, and provides a response containing only the
+   required attributes for both.
+
+   #+BEGIN_SRC ruby
+     # ./Gemfile
+     source "https://rubygems.org"
+     gem "sinatra", require: "sinatra/base"
+     gem "rack"
+
+     # ./ruby_snake.rb
+     require "json"
+
+     class RubySnake < Sinatra::Base
+       post "/start" do
+         {
+           name: "simple-ruby-example-snake",
+           color: "#123456"
+         }.to_json
+       end
+
+       post "/move" do
+         {
+           move: "up"
+         }.to_json
+       end
+     end
+   #+END_SRC
+
+   This Snake only goes up, but it works!
+
+* Game Rules
 ** Objective
 
    BattleSnake is an adaptation of the classic video game "Snake", where the player
@@ -359,8 +391,14 @@ All responses are expected to have a =200 OK= status code.
 *** Starvation
 
 * General Advice
-* Deploying your snake
+  coming soon...
+* Deploying Your Snake
   coming soon...
 * Example Snakes
+  more coming soon...
 ** Ruby Snake
    [[https://github.com/Stembolthq/battle_snake/blob/v2.0.0/examples/ruby_snake/ruby_snake.rb][Ruby Snake]]
+
+* Footnotes
+
+[fn:1] http://www.sinatrarb.com/intro.html
