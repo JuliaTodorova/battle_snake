@@ -370,14 +370,61 @@ All responses are expected to have a =200 OK= status code.
    :PROPERTIES:
    :CUSTOM_ID: type-board-cell
    :END:
+
+   | Attributes |            | Type                                     |
+   |------------+------------+------------------------------------------|
+   | *state*    |            | "head" \vert "body" \vert "food" \vert "empty" |
+   | *snake*    | /optional/ | string                                   |
+
+   #+BEGIN_SRC json
+     {
+         "state": "head",
+         "snake": "ruby-snake"
+     }
+   #+END_SRC
 ** Point
    :PROPERTIES:
    :CUSTOM_ID: type-point
    :END:
+
+   A 2-dimensional vector.
+
+   #+BEGIN_EXAMPLE
+     x :: 0..infinity
+     y :: 0..infinity
+     Point :: [x, y]
+   #+END_EXAMPLE
+
+   #+BEGIN_SRC json
+     [0, 1]
+   #+END_SRC
+
 ** Snake
    :PROPERTIES:
    :CUSTOM_ID: type-snake
    :END:
+
+   | Attributes      |   | Type         |
+   |-----------------+---+--------------|
+   | *coords*        |   | Array<[[#type-point][Point]]> |
+   | *health_points* |   | 0..100       |
+   | *id*            |   | UUID         |
+   | *name*          |   | string       |
+   | *taunt*         |   | string       |
+
+   #+BEGIN_SRC js
+     {
+       "taunt": "git gud",
+       "name": "my-snake",
+       "id": "5b079dcd-0494-4afd-a08e-72c9a7c2d983",
+       "health_points": 93,
+       "coords": [
+         [0, 0],
+         [0, 0],
+         [0, 0]
+       ]
+     }
+   #+END_SRC
 
 * Game Rules
 ** Objective
@@ -387,56 +434,28 @@ All responses are expected to have a =200 OK= status code.
    the snake grow longer. The main objective is to collect as much food as
    as possible, while avoiding hitting obstacles, such as walls and most
    importantly - your own snake.
+
    In BattleSnake, each round X number of snakes is pitted against each other,
    and the goal is to be the last snake left alive at the end of the round.
 
 ** You lose if your snake...
-   - runs into another snake's body.
-   - runs into its own body.
-   - runs into the walls of the play field.
-   - collides head-to-head with a longer snake (both die if they are of the same size).
-   - starves.
+   * Runs into another snake's body.
+   * Runs into its own body.
+   * Runs into the walls of the play field.
+   * Collides head-to-head with a longer snake (both die if they are of the same size).
+   * Starves.
 
 ** Starvation rules
-   - Your snake starts out with 100 life and counts down by 1 each turn.
-   - When your snake's life total reaches 0, it dies of starvation.
+   * Your snake starts out with 100 life and counts down by 1 each turn.
+   * When your snake's life total reaches 0, it dies of starvation.
 
 ** Avoiding starvation
-   - Food pellets spawn randomly around the play field.
-   - Each food pellet increases your snake's length by 1 and resets its life to 100.
+   * Food pellets spawn randomly around the play field.
+   * Each food pellet increases your snake's length by 1 and resets its life to 100.
 
 ** Sportsmanship
    - No DDoSing your opponents.
    - No manual control of your snake.
-
-** Turns
-   Pellentesque dapibus suscipit ligula. Donec posuere augue in quam. Etiam vel
-   tortor sodales tellus ultricies commodo. Suspendisse potenti. Aenean in sem ac
-   leo mollis blandit. Donec neque quam, dignissim in, mollis nec, sagittis eu,
-   wisi. Phasellus lacus. Etiam laoreet quam sed arcu. Phasellus at dui in ligula
-   mollis ultricies. Integer placerat tristique nisl. Praesent augue. Fusce
-   commodo. Vestibulum convallis, lorem a tempus semper, dui dui euismod elit,
-   vitae placerat urna tortor vitae lacus. Nullam libero mauris, consequat quis,
-   varius et, dictum id, arcu. Mauris mollis tincidunt felis. Aliquam feugiat
-   tellus ut neque. Nulla facilisis, risus a rhoncus fermentum, tellus tellus
-   lacinia purus, et dictum nunc justo sit amet elit.
-
-** Growing longer
-   Pellentesque dapibus suscipit ligula. Donec posuere augue in quam. Etiam vel
-   tortor sodales tellus ultricies commodo. Suspendisse potenti. Aenean in sem ac
-   leo mollis blandit. Donec neque quam, dignissim in, mollis nec, sagittis eu,
-   wisi. Phasellus lacus. Etiam laoreet quam sed arcu. Phasellus at dui in ligula
-   mollis ultricies. Integer placerat tristique nisl. Praesent augue. Fusce
-   commodo. Vestibulum convallis, lorem a tempus semper, dui dui euismod elit,
-   vitae placerat urna tortor vitae lacus. Nullam libero mauris, consequat quis,
-   varius et, dictum id, arcu. Mauris mollis tincidunt felis. Aliquam feugiat
-   tellus ut neque. Nulla facilisis, risus a rhoncus fermentum, tellus tellus
-   lacinia purus, et dictum nunc justo sit amet elit.
-
-**  Death
-*** Walls
-*** Collision
-*** Starvation
 
 * General Advice
   coming soon...
