@@ -195,15 +195,22 @@ $(function() {
 <h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec facilisis
-facilisis, est dui fermentum leo, quis tempor ligula erat quis odio. Nunc porta
-vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum. Aliquam posuere.
-Nunc aliquet, augue nec adipiscing interdum, lacus tellus malesuada massa, quis
-varius mi purus non odio. Pellentesque condimentum, magna ut suscipit hendrerit,
-ipsum augue ornare nulla, non luctus diam neque sit amet urna. Curabitur
-vulputate vestibulum lorem. Fusce sagittis, libero non molestie mollis, magna
-orci ultrices dolor, at vulputate neque nulla lacinia eros. Sed id ligula quis
-est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a sapien.
+Like previous years, all competing clients are expected to provide a web
+application that is available at a routeable URL.
+</p>
+
+<p>
+Clients are expected to respond to HTTP requests and provide a route for <a href="#post-start">POST /start</a> and <a href="#post-move">POST /move</a>.
+</p>
+
+<p>
+All clients are expected to respond within 200ms of the server's initial
+request. Failing to respond before the timemout may result in the server
+choosing a random move for you.
+</p>
+
+<p>
+All responses are expected to have a <code>200 OK</code> status code.
 </p>
 </div>
 </div>
@@ -211,44 +218,32 @@ est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a sapien.
 <div id="outline-container-sec-2" class="outline-2">
 <h2 id="sec-2"><span class="section-number-2">2</span> Callbacks</h2>
 <div class="outline-text-2" id="text-2">
-</div><div id="outline-container-sec-2-1" class="outline-3">
-<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Game Start</h3>
-<div class="outline-text-3" id="text-2-1">
-<p>
-Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
-facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
-odio. Nunc porta vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum.
-Aliquam posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
-malesuada massa, quis varius mi purus non odio. Pellentesque condimentum,
-magna ut suscipit hendrerit, ipsum augue ornare nulla, non luctus diam neque
-sit amet urna. Curabitur vulputate vestibulum lorem. Fusce sagittis, libero
-non molestie mollis, magna orci ultrices dolor, at vulputate neque nulla
-lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
-pulvinar nibh. Nam a sapien.
-</p>
+</div><div id="outline-container-post-start" class="outline-3">
+<h3 id="post-start"><a id="sec-2-1" name="sec-2-1"></a><span class="section-number-3">2.1</span> POST /start</h3>
+<div class="outline-text-3" id="text-post-start">
 </div>
 <div id="outline-container-sec-2-1-1" class="outline-4">
 <h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> URL</h4>
 <div class="outline-text-4" id="text-2-1-1">
-<pre class="example">
-/start
-</pre>
+<p>
+<code>/start</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-1-2" class="outline-4">
 <h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> Method</h4>
 <div class="outline-text-4" id="text-2-1-2">
-<pre class="example">
-POST
-</pre>
+<p>
+<code>POST</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-1-3" class="outline-4">
 <h4 id="sec-2-1-3"><span class="section-number-4">2.1.3</span> Headers</h4>
 <div class="outline-text-4" id="text-2-1-3">
-<pre class="example">
-Content-Type: application/json
-</pre>
+<p>
+<code>Content-Type: application/json</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-1-4" class="outline-4">
@@ -270,7 +265,7 @@ Content-Type: application/json
 <h4 id="sec-2-1-5"><span class="section-number-4">2.1.5</span> Example Response</h4>
 <div class="outline-text-4" id="text-2-1-5">
 <ul class="org-ul">
-<li>Code: 200
+<li>Code: <code>200 OK</code>
 </li>
 <li>Content:
 </li>
@@ -320,9 +315,9 @@ Requests timeout after 200ms, failing to respond will do something.
 </div>
 </div>
 </div>
-<div id="outline-container-sec-2-2" class="outline-3">
-<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Request Snake Move</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-post-move" class="outline-3">
+<h3 id="post-move"><a id="sec-2-2" name="sec-2-2"></a><span class="section-number-3">2.2</span> POST /move</h3>
+<div class="outline-text-3" id="text-post-move">
 <p>
 Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
 facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
@@ -339,25 +334,25 @@ pulvinar nibh. Nam a sapien.
 <div id="outline-container-sec-2-2-1" class="outline-4">
 <h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> URL</h4>
 <div class="outline-text-4" id="text-2-2-1">
-<pre class="example">
-/start
-</pre>
+<p>
+<code>/move</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-2-2" class="outline-4">
 <h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> Method</h4>
 <div class="outline-text-4" id="text-2-2-2">
-<pre class="example">
-POST
-</pre>
+<p>
+<code>POST</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-2-3" class="outline-4">
 <h4 id="sec-2-2-3"><span class="section-number-4">2.2.3</span> Headers</h4>
 <div class="outline-text-4" id="text-2-2-3">
-<pre class="example">
-Content-Type: application/json
-</pre>
+<p>
+<code>Content-Type: application/json</code>
+</p>
 </div>
 </div>
 <div id="outline-container-sec-2-2-4" class="outline-4">
@@ -461,7 +456,7 @@ Content-Type: application/json
 <h4 id="sec-2-2-5"><span class="section-number-4">2.2.5</span> Example Response</h4>
 <div class="outline-text-4" id="text-2-2-5">
 <ul class="org-ul">
-<li>Code: 200
+<li>Code: <code>200 OK</code>
 </li>
 <li>Content:
 </li>
@@ -639,13 +634,34 @@ lacinia purus, et dictum nunc justo sit amet elit.
 </div>
 </div>
 </div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Deploying your snake</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+coming soon&#x2026;
+</p>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Example Snakes</h2>
+<div class="outline-text-2" id="text-5">
+</div><div id="outline-container-sec-5-1" class="outline-3">
+<h3 id="sec-5-1"><span class="section-number-3">5.1</span> Ruby Snake</h3>
+<div class="outline-text-3" id="text-5-1">
+<p>
+<a href="https://github.com/Stembolthq/battle_snake/blob/v2.0.0/examples/ruby_snake/ruby_snake.rb">Ruby Snake</a>
+</p>
+</div>
+</div>
+</div>
 </div><div class="col-md-3"><nav id="table-of-contents">
 <div id="text-table-of-contents" class="bs-docs-sidebar">
 <ul class="nav">
 <li><a href="#sec-1">1. Introduction</a></li>
 <li><a href="#sec-2">2. Callbacks</a>
 <ul class="nav">
-<li><a href="#sec-2-1">2.1. Game Start</a>
+<li><a href="#post-start">2.1. POST /start</a>
 <ul class="nav">
 <li><a href="#sec-2-1-1">2.1.1. URL</a></li>
 <li><a href="#sec-2-1-2">2.1.2. Method</a></li>
@@ -656,7 +672,7 @@ lacinia purus, et dictum nunc justo sit amet elit.
 <li><a href="#sec-2-1-7">2.1.7. Notes</a></li>
 </ul>
 </li>
-<li><a href="#sec-2-2">2.2. Request Snake Move</a>
+<li><a href="#post-move">2.2. POST /move</a>
 <ul class="nav">
 <li><a href="#sec-2-2-1">2.2.1. URL</a></li>
 <li><a href="#sec-2-2-2">2.2.2. Method</a></li>
@@ -687,9 +703,10 @@ lacinia purus, et dictum nunc justo sit amet elit.
 </li>
 </ul>
 </li>
-<li><a href="#sec-4">4. Example Snakes</a>
+<li><a href="#sec-4">4. Deploying your snake</a></li>
+<li><a href="#sec-5">5. Example Snakes</a>
 <ul class="nav">
-<li><a href="#sec-4-1">4.1. Ruby Snake</a></li>
+<li><a href="#sec-5-1">5.1. Ruby Snake</a></li>
 </ul>
 </li>
 </ul>

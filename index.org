@@ -26,42 +26,29 @@ Node.self()
 : :"org-server@localhost"
 
 * Introduction
-  # some comments about how the game is structured.
-  Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec facilisis
-  facilisis, est dui fermentum leo, quis tempor ligula erat quis odio. Nunc porta
-  vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum. Aliquam posuere.
-  Nunc aliquet, augue nec adipiscing interdum, lacus tellus malesuada massa, quis
-  varius mi purus non odio. Pellentesque condimentum, magna ut suscipit hendrerit,
-  ipsum augue ornare nulla, non luctus diam neque sit amet urna. Curabitur
-  vulputate vestibulum lorem. Fusce sagittis, libero non molestie mollis, magna
-  orci ultrices dolor, at vulputate neque nulla lacinia eros. Sed id ligula quis
-  est convallis tempor. Curabitur lacinia pulvinar nibh. Nam a sapien.
+Like previous years, all competing clients are expected to provide a web
+application that is available at a routeable URL.
+
+Clients are expected to respond to HTTP requests and provide a route for [[#post-start][POST /start]] and [[#post-move][POST /move]].
+
+# FIXME: decide what happends on timeout
+All clients are expected to respond within 200ms of the server's initial
+request. Failing to respond before the timemout may result in the server
+choosing a random move for you.
+
+All responses are expected to have a =200 OK= status code.
 
 * Callbacks
-** Game Start
-   # some information on the api call
-   Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
-   facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
-   odio. Nunc porta vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum.
-   Aliquam posuere. Nunc aliquet, augue nec adipiscing interdum, lacus tellus
-   malesuada massa, quis varius mi purus non odio. Pellentesque condimentum,
-   magna ut suscipit hendrerit, ipsum augue ornare nulla, non luctus diam neque
-   sit amet urna. Curabitur vulputate vestibulum lorem. Fusce sagittis, libero
-   non molestie mollis, magna orci ultrices dolor, at vulputate neque nulla
-   lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
-   pulvinar nibh. Nam a sapien.
+** POST /start
+   :PROPERTIES:
+   :CUSTOM_ID: post-start
+   :END:
 *** URL
-    #+BEGIN_SRC
-    /start
-    #+END_SRC
+    =/start=
 *** Method
-    #+BEGIN_SRC
-    POST
-    #+END_SRC
+    =POST=
 *** Headers
-    #+BEGIN_SRC
-    Content-Type: application/json
-    #+END_SRC
+    =Content-Type: application/json=
 *** Example Request
     #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes
       alias BattleSnake.{GameForm}
@@ -83,7 +70,7 @@ Node.self()
     #+END_SRC
 
 *** Example Response
-    - Code: 200
+    - Code: =200 OK=
     - Content:
     #+BEGIN_SRC js
     {
@@ -112,7 +99,10 @@ Node.self()
 
 *** Notes
     Requests timeout after 200ms, failing to respond will do something.
-** Request Snake Move
+** POST /move
+   :PROPERTIES:
+   :CUSTOM_ID: post-move
+   :END:
    Nullam eu ante vel est convallis dignissim. Fusce suscipit, wisi nec
    facilisis facilisis, est dui fermentum leo, quis tempor ligula erat quis
    odio. Nunc porta vulputate tellus. Nunc rutrum turpis sed pede. Sed bibendum.
@@ -124,17 +114,11 @@ Node.self()
    lacinia eros. Sed id ligula quis est convallis tempor. Curabitur lacinia
    pulvinar nibh. Nam a sapien.
 *** URL
-    #+BEGIN_SRC
-    /start
-    #+END_SRC
+    =/move=
 *** Method
-    #+BEGIN_SRC
-    POST
-    #+END_SRC
+    =POST=
 *** Headers
-    #+BEGIN_SRC
-    Content-Type: application/json
-    #+END_SRC
+    =Content-Type: application/json=
 *** Example Request
     #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes :results value
       alias BattleSnake.{
@@ -265,7 +249,7 @@ Node.self()
 
 
 *** Example Response
-    - Code: 200
+    - Code: =200 OK=
     - Content:
     #+BEGIN_SRC js
       {
@@ -299,7 +283,7 @@ Node.self()
     Requests timeout after 200ms, failing to respond will result in the server
     choosing a move for you.
 
-*  Game rules
+* Game rules
 ** Objective
 
    BattleSnake is an adaptation of the classic video game "Snake", where the player
@@ -358,6 +342,8 @@ Node.self()
 *** Collision
 *** Starvation
 
+* Deploying your snake
+  coming soon...
 * Example Snakes
 ** Ruby Snake
    [[https://github.com/Stembolthq/battle_snake/blob/v2.0.0/examples/ruby_snake/ruby_snake.rb][Ruby Snake]]
