@@ -39,10 +39,26 @@ choosing a random move for you.
 All responses are expected to have a =200 OK= status code.
 
 * Callbacks
-** POST /start
+** =POST /start=
    :PROPERTIES:
    :CUSTOM_ID: post-start
    :END:
+
+   Called when a new game is started.
+
+   Game IDs are guaranteed to be unique.
+
+   The purpose of this callback is for clients to report what their snake's
+   name, colour, and other display properties should be for this game.
+
+   This callback should not be used to manage internal snake state it is not
+   guaranteed that as you will be notified when the game ends, or when your
+   snake dies.
+
+   All attributes the request are provided to maintain backwards compatibility
+   with 2015 snake clients - it is *strongly* recommend that clients exclusively
+   use the [[#post-move][move callback]] for any and all game play logic.
+
 *** URL
     =/start=
 *** Method
@@ -99,7 +115,7 @@ All responses are expected to have a =200 OK= status code.
 
 *** Notes
     Requests timeout after 200ms, failing to respond will do something.
-** POST /move
+** =POST /move=
    :PROPERTIES:
    :CUSTOM_ID: post-move
    :END:
@@ -342,6 +358,7 @@ All responses are expected to have a =200 OK= status code.
 *** Collision
 *** Starvation
 
+* General Advice
 * Deploying your snake
   coming soon...
 * Example Snakes
