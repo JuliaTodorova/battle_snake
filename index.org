@@ -1,4 +1,4 @@
-#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline author:nil
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:nil _:nil arch:headline author:nil
 #+OPTIONS: broken-links:nil c:nil creator:nil d:(not "LOGBOOK") date:nil e:t
 #+OPTIONS: email:nil f:t inline:t num:t p:nil pri:nil prop:nil stat:t tags:t
 #+OPTIONS: tasks:nil tex:t timestamp:nil title:nil toc:3 todo:nil |:t
@@ -28,6 +28,11 @@ Node.self()
 #+RESULTS:
 : :"org-server@localhost"
 
+#+BEGIN_EXPORT html
+<style>
+</style>
+#+END_EXPORT
+
 * Introduction
 Like previous years, all competing clients are expected to provide a web
 application that is available at a routeable URL.
@@ -49,7 +54,7 @@ All responses are expected to have a =200 OK= status code.
 
    Called when a new game is started.
 
-   Game IDs are guaranteed to be unique.
+   Game IDs are guaranteed to be unique[fn:2].
 
    The purpose of this callback is for clients to report what their snake's
    name, colour, and other display properties should be for this game.
@@ -62,12 +67,18 @@ All responses are expected to have a =200 OK= status code.
    with 2015 snake clients - it is *strongly* recommend that clients exclusively
    use the [[#post-move][move callback]] for any and all game play logic.
 
-*** URL
-    =/start=
-*** Method
-    =POST=
-*** Headers
-    =Content-Type: application/json=
+   | *URL*     | /start                         |
+   | *Method*  | POST                           |
+   | *Headers* | Content-Type: application-json |
+
+*** Request attributes
+    | Attribute | Type    |
+    |-----------+---------|
+    | <l>       | <l>     |
+    | *game_id* | UUID    |
+    | *height*  | integer |
+    | *width*   | integer |
+    |-----------+---------|
 *** Example Request
     #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes
       alias BattleSnake.{GameForm}
@@ -79,14 +90,23 @@ All responses are expected to have a =200 OK= status code.
       |> IO.puts
     #+END_SRC
 
-    #+RESULTS[b1b5b8aa7f8f6ff8a9ad1402d1a30bd6e28d8a90]:
+    #+RESULTS[6084a51ad554b37393dec1e7191d16ed6861537b]:
     #+BEGIN_SRC js
     {
       "width": 20,
       "height": 20,
-      "game_id": "a7ee8ceb-5c82-4513-a6fe-7a1f86c160f7"
+      "game_id": "b1dadee8-a112-4e0e-afa2-2845cd1f21aa"
     }
+    :ok
     #+END_SRC
+
+*** Response Attributes
+    | Attribute  |            | Type   |                                                                   |
+    |------------+------------+--------+-------------------------------------------------------------------|
+    | *color*    |            | string | A valid css color. HSL, RBG, hex, or named colours are all valid. |
+    | *head_url* | /optional/ | url    | Url of an image to use for the head of your snake.                |
+    | *name*     |            | string | Your snake's name.                                                |
+    | *taunt*    | /optional/ | string | Message to display in the game client.                            |
 
 *** Example Response
     - Code: =200 OK=
@@ -116,8 +136,6 @@ All responses are expected to have a =200 OK= status code.
     {"name":"test-snake","color":"#123123"}
     #+END_SRC
 
-*** Notes
-    Requests timeout after 200ms, failing to respond will do something.
 ** =POST /move=
    :PROPERTIES:
    :CUSTOM_ID: post-move
@@ -125,14 +143,26 @@ All responses are expected to have a =200 OK= status code.
    The game server will issue a request for this callback on each turn to
    request the client's move.
 
-   This callback should be used for all game logic
+   This callback should be used for all game logic.
 
-*** URL
-    =/move=
-*** Method
-    =POST=
-*** Headers
-    =Content-Type: application/json=
+   | *URL*     | /start                         |
+   | *Method*  | POST                           |
+   | *Headers* | Content-Type: application-json |
+
+*** Request Attributes
+    | Attribute | Type                    |                                                                                                                                                                                                                     |
+    |-----------+-------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | <l>       | <l>                     |                                                                                                                                                                                                                     |
+    | *board*   | Array<Array<[[#type-board-cell][BoardCell]]>> | Two dimensional representation of the board. It's not recommeded that you use this for game logic, instead consider using =food=, =snakes=, =you=, =width= and =height=. This is mostly for backward compatibility. |
+    | *food*    | Array<[[#type-point][Point]]>            | Array of all food currently on the board                                                                                                                                                                            |
+    | *game_id* | UUID                    |                                                                                                                                                                                                                     |
+    | *height*  | integer                 |                                                                                                                                                                                                                     |
+    | *snakes*  | Array<[[#type-snake][Snake]]>            | Array of all living snakes in the game                                                                                                                                                                              |
+    | *turn*    | integer                 | The current turn.                                                                                                                                                                                                   |
+    | *width*   | integer                 |                                                                                                                                                                                                                     |
+    | *you*     | UUID                    | A reference to your snake's id, the snake object can be found in =snakes=.                                                                                                                                          |
+    |-----------+-------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
 *** Example Request
     #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :wrap "SRC js" :eval no-export :exports results :cache yes :results value
       alias BattleSnake.{
@@ -143,17 +173,21 @@ All responses are expected to have a =200 OK= status code.
       use BattleSnake.Point
 
       my_snake = %Snake{
-        name: "my-snake",
-        url: "localhost:4000",
         coords: [p(0, 0), p(0, 0), p(0, 0)],
+        health_points: 93,
         id: Ecto.UUID.generate(),
+        name: "my-snake",
+        taunt: "git gud",
+        url: "localhost:4000",
       }
 
       other_snake = %Snake{
-        name: "other-snake",
-        url: "localhost:4001",
         coords: [p(1, 0), p(1, 0), p(1, 0)],
+        health_points: 50,
         id: Ecto.UUID.generate(),
+        name: "other-snake",
+        taunt: "gotta go fast",
+        url: "localhost:4001",
       }
 
       food = [p(1,1)]
@@ -167,36 +201,22 @@ All responses are expected to have a =200 OK= status code.
         food: food,
         game_id: Ecto.UUID.generate(),
       }
-      |> Poison.encode!(pretty: true, me: my_snake)
-      |> IO.puts()
+      |> Poison.encode!(pretty: true, me: my_snake.id)
+      |> IO.puts
     #+END_SRC
 
-    #+RESULTS[446eb330ce51496bd7b99b5978d92fad138e6e2e]:
+    #+RESULTS[e909af054857d10965dd9905fdf8433dcd44ba75]:
     #+BEGIN_SRC js
     {
-      "you": {
-        "url": "localhost:4000",
-        "name": "my-snake",
-        "coords": [
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ],
-          [
-            0,
-            0
-          ]
-        ]
-      },
+      "you": "5b079dcd-0494-4afd-a08e-72c9a7c2d983",
+      "width": 2,
       "turn": 0,
       "snakes": [
         {
-          "url": "localhost:4000",
+          "taunt": "git gud",
           "name": "my-snake",
+          "id": "5b079dcd-0494-4afd-a08e-72c9a7c2d983",
+          "health_points": 93,
           "coords": [
             [
               0,
@@ -213,8 +233,10 @@ All responses are expected to have a =200 OK= status code.
           ]
         },
         {
-          "url": "localhost:4001",
+          "taunt": "gotta go fast",
           "name": "other-snake",
+          "id": "9116ef2a-51c1-4fb5-9b3f-b5d3fbfcbef6",
+          "health_points": 50,
           "coords": [
             [
               1,
@@ -231,7 +253,8 @@ All responses are expected to have a =200 OK= status code.
           ]
         }
       ],
-      "game_id": "754c44c0-40bb-41d6-854a-e3d2083277fa",
+      "height": 2,
+      "game_id": "aecf53b9-c7f2-4f5d-bc3f-cd14cb8338f0",
       "food": [
         [
           1,
@@ -259,8 +282,15 @@ All responses are expected to have a =200 OK= status code.
         ]
       ]
     }
+    :ok
     #+END_SRC
 
+***  Response Attributes
+    | Attribute |            | Type                                         |
+    |-----------+------------+----------------------------------------------|
+    | *move*    | *required* | "up" \vert "left" \vert "down" \vert "right" |
+    | *taunt*   | /optional/ | string                                       |
+    |-----------+------------+----------------------------------------------|
 
 *** Example Response
     - Code: =200 OK=
@@ -334,6 +364,21 @@ All responses are expected to have a =200 OK= status code.
 
    This Snake only goes up, but it works!
 
+
+* Data Types
+** BoardCell
+   :PROPERTIES:
+   :CUSTOM_ID: type-board-cell
+   :END:
+** Point
+   :PROPERTIES:
+   :CUSTOM_ID: type-point
+   :END:
+** Snake
+   :PROPERTIES:
+   :CUSTOM_ID: type-snake
+   :END:
+
 * Game Rules
 ** Objective
 
@@ -404,4 +449,10 @@ All responses are expected to have a =200 OK= status code.
 
 * Footnotes
 
+[fn:2] https://en.wikipedia.org/wiki/Universally_unique_identifier#Collisions
+
 [fn:1] http://www.sinatrarb.com/intro.html
+
+# Local Variables:
+# org-twbs-table-default-attributes: (:class "table")
+# End:
