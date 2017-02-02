@@ -17,7 +17,10 @@
 #+HTML_HEAD: <link  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 #+HTML_HEAD: <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
 #+CREATOR: <a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org-mode</a> 9.0.3)
+#+STARTUP: content
 
+# run ./scripts/org-server to start the org-server node from the battle snake project root.
+# required to regenerate code blocks.
 #+BEGIN_SRC elixir :remsh org-server@localhost :sname org-console :exports none
 Node.self()
 #+END_SRC
